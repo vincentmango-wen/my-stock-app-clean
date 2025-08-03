@@ -36,4 +36,4 @@ jobs:
           git config user.email github-actions@github.com
           git add data/recommendations.json
           git diff --cached --quiet || git commit -m "🕖 Daily update"
-          git push
+          git push# force update
