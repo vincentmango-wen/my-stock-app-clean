@@ -1,11 +1,9 @@
-
-
-import fs from 'fs';
-import path from 'path';
-import dotenv from 'dotenv';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as dotenv from 'dotenv';
 import fetch from 'node-fetch';
 
-dotenv.config();
+dotenv.config({ path: '.env.local' });
 
 const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
 
@@ -14,22 +12,23 @@ if (!SLACK_WEBHOOK_URL) {
   process.exit(1);
 }
 
-const dataPath = path.resolve(__dirname, '../../data/recommendations.json');
+const dataPath = path.resolve(__dirname, '../data/recommendationMaterials.json');
 
 try {
   const fileData = fs.readFileSync(dataPath, 'utf-8');
-  const recommendations = JSON.parse(fileData);
+  const recommendationsObject = JSON.parse(fileData);
+  const recommendations = Object.entries(recommendationsObject);
 
-  if (!Array.isArray(recommendations) || recommendations.length === 0) {
+  if (recommendations.length === 0) {
     console.log('⚠ No recommendations found.');
     process.exit(0);
   }
 
-  const messageBlocks = recommendations.map((rec: any, index: number) => {
-    return `*${index + 1}. ${rec.symbol} - ${rec.name}*\n> ${rec.reason}\n> 上昇予測: ${rec.expectedReturn}%（確率: ${rec.confidence}%）`;
+  const messageBlocks = recommendations.map(([symbol, details]: [string, any], index: number) => {
+    return `🟢 *${index + 1}. ${symbol} - ${details.summary}*\n• 理由: ${details.reason}\n• 詳細: ${details.link}`;
   });
 
-  const text = `📈 *本日の推奨銘柄リスト*（${new Date().toLocaleDateString('ja-JP')}）\n\n${messageBlocks.join('\n\n')}`;
+  const text = `📊 *本日のAI株推奨リスト*（${new Date().toLocaleDateString('ja-JP')}）\n\n${messageBlocks.join('\n\n')}\n\n🔁 本リストはAIによる予測に基づいています。投資判断はご自身の責任でお願いします。`;
 
   fetch(SLACK_WEBHOOK_URL, {
     method: 'POST',
