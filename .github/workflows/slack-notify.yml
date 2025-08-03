@@ -1,0 +1,29 @@
+
+
+name: Daily Slack Notification
+
+on:
+  schedule:
+    - cron: '0 22 * * *'  # JST 朝7時 → UTC前日の22時
+  workflow_dispatch:      # 手動実行も可能にする
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Slack notification script
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: npx ts-node --esm scripts/postToSlack.ts

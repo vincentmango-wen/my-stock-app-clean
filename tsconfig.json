@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "es6", // 推奨追加：対象とするECMAScriptバージョン
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true, // 厳格な型チェックが推奨されます
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "forceConsistentCasingInFileNames": true, // ファイル名の大文字小文字不一致検出
+    "strictNullChecks": true
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",         // ← JSXで書いたJSファイルも含むなら追加
+    "**/*.json"        // ← JSONインポートを含めるなら明示しておくと◎
+  ],
+  "exclude": [
+    "node_modules",
+    ".next"            // ← キャッシュディレクトリを除外すると安定
+  ]
+}

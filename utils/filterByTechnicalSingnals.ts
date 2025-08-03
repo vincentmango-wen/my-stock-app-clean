@@ -1,21 +1,15 @@
 
 
 // テクニカル指標（RSIとMACD）を使って銘柄をフィルタリングするユーティリティ関数
-import fs from 'fs';
-import path from 'path';
 import { RSI, MACD } from 'technicalindicators';
 
-// 1. price-data.jsonからヒストリカル終値データを読み込む
-//    ファイルは { [code: string]: number[] } の形式（code: 終値配列）
-const pricePath = path.resolve(__dirname, '../price-data.json');
-const priceData: Record<string, number[]> = JSON.parse(fs.readFileSync(pricePath, 'utf-8'));
 
 /**
  * 2. RSIとMACDを計算し、
  * 3. RSI < 30 かつ MACDゴールデンクロス（signal上抜け）銘柄のみ抽出
  * 4. 該当する銘柄コード配列を返す
  */
-export function filterByTechnicalSignals(): string[] {
+export function filterByTechnicalSignals(priceData: Record<string, number[]>): string[] {
   const matched: string[] = [];
 
   for (const code of Object.keys(priceData)) {

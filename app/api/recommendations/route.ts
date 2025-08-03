@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 // テクニカル分析のフィルタ関数をインポート
-import { filterByTechnicalSignals } from '.@/lib/technicalAnalysis';
+import { filterByTechnicalSignals } from '../../../utils/filterByTechnicalSingnals';
 // Yahoo Finance ライブラリをインポート
 import yahooFinance from 'yahoo-finance2';
 
